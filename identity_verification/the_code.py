@@ -1,10 +1,10 @@
 class Passport_Atm_card:
-    def __init__(self, passport, atm_card):
+    def __init__(self, passport, nin_slip):
         import pytesseract
         #pytesseract.pytesseract.tesseract_cmd = r"full path to the exe file"
         pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
         self.passport = passport
-        self.atm_card = atm_card
+        self.nin_slip = nin_slip
     def extract_passport(self, passport):
         from passporteye import read_mrz
         self.passport = passport
@@ -19,15 +19,15 @@ class Passport_Atm_card:
         print(self.data)
         return self.data
 
-    def ocr_core(self, atm_card):
-        self.atm_card = atm_card
+    def ocr_core(self, nin_slip_image):
+        self.nin_slip = nin_slip_image
         try:
             from PIL import Image
         except ImportError:
             import Image
         import pytesseract
         import re
-        img = Image.open(self.atm_card)
+        img = Image.open(self.nin_slip)
         img = img.convert("L")
         
         self.text = pytesseract.image_to_string(img)
@@ -47,7 +47,7 @@ class Passport_Atm_card:
 #jaccard similarities
     def compare_data(self,):
         mrz_data = self.extract_passport(self.passport)
-        data = self.ocr_core(self.atm_card)
+        data = self.ocr_core(self.nin_slip)
         intersection_cardinality = len(set.intersection(*[set(mrz_data), set(data)]))
         union_cardinality = len(set.union(*[set(mrz_data), set(data)]))
         result = intersection_cardinality / float(union_cardinality)
@@ -56,8 +56,8 @@ class Passport_Atm_card:
         else:
             return (result, 'NO MATCH')
 
-passport = (r"C:\Users\T490\Downloads\passp.jpg")
-atm_card = (r"C:\Users\T490\Downloads\scan0002_Original (1).jpg")
-d = Passport_Atm_card(passport, atm_card)
+passport_ = (r"C:\Users\T490\Downloads\passp.jpg")
+ninslip = (r"C:\Users\T490\Downloads\scan0002_Original (1).jpg")
+d = Passport_Atm_card(passport_, ninslip)
 result = d.compare_data()
 print(result)
