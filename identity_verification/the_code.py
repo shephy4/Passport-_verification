@@ -1,6 +1,7 @@
-class Passport_Atm_card:
+import pytesseract, pandas as pd, numpy as np
+
+class Identity_Verification:
     def __init__(self, passport, nin_slip):
-        import pytesseract
         #pytesseract.pytesseract.tesseract_cmd = r"full path to the exe file"
         pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
         self.passport = passport
@@ -10,7 +11,13 @@ class Passport_Atm_card:
         self.passport = passport
         self.mrz = read_mrz(self.passport, save_roi=True)
         self.mrz_data = self.mrz.to_dict()
-        #print(self.mrz_data)
+        data_ = []
+        data = dict(self.mrz_data)
+        data_.append(data)
+        print(data_)
+        self.df = pd.DataFrame(data_)
+        self.df.to_csv('bio_data.csv')
+        print(self.df)
         self.name = self.mrz_data['names'] + ' ' + self.mrz_data['surname']
         nin = self.mrz_data['personal_number'].split('<')[0]
         nationality = self.mrz_data['nationality']
@@ -52,12 +59,13 @@ class Passport_Atm_card:
         union_cardinality = len(set.union(*[set(mrz_data), set(data)]))
         result = intersection_cardinality / float(union_cardinality)
         if result >= 0.90:
-            return (result, 'MATCH')
+
+            return (f"MATCH : {result}", self.df)
         else:
-            return (result, 'NO MATCH')
+            return (f"NO MATCH : {result}", "")
 
 passport_ = (r"C:\Users\T490\Downloads\passp.jpg")
 ninslip = (r"C:\Users\T490\Downloads\scan0002_Original (1).jpg")
-d = Passport_Atm_card(passport_, ninslip)
+d = Identity_Verification(passport_, ninslip)
 result = d.compare_data()
 print(result)
