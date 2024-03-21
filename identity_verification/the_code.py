@@ -49,7 +49,6 @@ class Identity_Verification:
         print(self.text)
         #self.text = re.sub('[^A-Z\s]+', '', str(self.text))
         #self.text = re.sub('\s+', ' ', str(self.text))
-        #print(self.text)
         return self.text
 #jaccard similarities
     def compare_data(self,):
