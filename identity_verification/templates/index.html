@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Identity Verification</title>
+</head>
+<body>
+    <h2>Upload Passport & NIN Slip</h2>
+    <form action="/verify_identity" method="post" enctype="multipart/form-data">
+        <label for="passport">Upload Passport Image:</label>
+        <input type="file" id="passport" name="passport_image" required>
+        <br><br>
+        <label for="nin">Upload NIN Slip:</label>
+        <input type="file" id="nin" name="nin_image" required>
+        <br><br>
+        <button type="submit">Verify Identity</button>
+    </form>
+</body>
+</html>
